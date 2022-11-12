@@ -81,11 +81,15 @@ columnsNoRepetition = And [ Or [ N (i, j, n), N (i', j, n) ]
                          i <- [1..9], i' <- [1..(i-1)] ]
                       
 squaresNoRepetition :: Form (Int,Int,Int)
-squaresNoRepetition = And [ Or [ N (i, j, n), N (i', j', n) ] 
-                   | a <- [0..2], b <- [0..2],
-                     i <- [(3*a+1)..(3*a+3)], j <- [(3*b+1)..(3*b+3)],
-                     i' <- [(3*a+1)..(i-1)], j' <- [(3*b+1)..(j-1)], 
-                     n <- [1..9] ]
+squaresNoRepetition = And [Or [N (i, j, n), N (i', j', n)] |
+   a <- [0 .. 2],
+   b <- [0 .. 2],
+   i <- [(3 * a + 1) .. (3 * a + 3)],
+   j <- [(3 * b + 1) .. (3 * b + 3)],
+   i' <- [(3 * a + 1) .. i],
+   j' <- [(3 * b + 1) .. (3 * b + 3)],
+   (i < i') || (j < j'),
+   n <- [1 .. 9]]
 
 solutions :: Form (Int, Int, Int) -> [[Literal (Int, Int, Int)]]
 solutions problem = dpll (sudoku <&&> problem)
